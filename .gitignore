@@ -95,3 +95,5 @@ build/
 Thumbs.db
 .vscode/
 .idea/
+
+.env
