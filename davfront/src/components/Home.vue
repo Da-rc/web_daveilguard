@@ -1,26 +1,34 @@
 <template>
+  <div class="divLogo">
+    <img id="logoDAV" src="../assets/DATV_Logo.webp"/>
+  </div>
 
-    <div class="menu">
-      <div class="menu-item">
-        Clase 1
+  <div class="tabla">
+   <!-- <h1>{{clase.nombre}} skills</h1> -->
+    <div class="menuClases">
+      <div class="menu-item"
+           :class="{ active: selectedClass === 'Warrior' }"
+           @click="selectClase('Warrior')">
+        Warrior
       </div>
-      <div class="menu-item">
-        Clase 2
+      <div class="menu-item"
+           :class="{ active: selectedClass === 'Rogue' }"
+           @click="selectClase('Rogue')">
+        Rogue
       </div>
-      <div class="menu-item">
-        Clase 3
+      <div class="menu-item"
+           :class="{ active: selectedClass === 'Mage' }"
+           @click="selectClase('Mage')">
+        Mage
       </div>
     </div>
-  <div class="tabla">
-   <h1>Habilidades de la Clase: {{clase.nombre}}</h1>
-
     <!--tabla de categorias y skills-->
     <table>
       <thead>
         <tr>
-          <th>Categoría</th>
-          <th>Nombre</th>
-          <th>Descripcion</th>
+          <th>Subclass</th>
+          <th>Skill name</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
@@ -53,92 +61,136 @@ export default {
         nombre: '',
         categorias: [],
       },
+      selectedClass: 'Warrior',
     };
   },
   mounted() {
-    getClaseByName('Warrior')
-        .then((response) => {
-          this.clase = response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        })
+    this.fetchClase("Warrior");
+  },
+  methods: {
+    fetchClase(name) {
+      getClaseByName(name)
+          .then((response) => {
+            this.clase = response.data;
+          })
+          .catch((error) => {
+            console.error("Error fetching class:", error);
+          });
+    },
+    selectClase(name) {
+      this.selectedClass = name;
+      this.fetchClase(name);
+    }
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#logoDAV {
+  max-width: 70%;
+}
 
-.menu{
+.menuClases{
   display: flex;
   align-items: center;
   justify-content: space-around;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
+  width: 80%;
+  margin: 0 auto;
   padding: 10px 0;
-  background: #fff;
-
+  background: linear-gradient(to right, #ffffff, #f3f4f6);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .menu-item{
   flex: 1;
   text-align: center;
-  color: #707070;
-  border: solid 2px red;
+  color: #505050;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.menu-item.active {
+  color: #6c4675;
+  font-weight: bold;
 }
 
 .menu-item:hover{
-  color: red;
+  color: #6c4675;
+  transform: scale(1.1);
 }
 
 table {
-  width: 100%;
+  width: 90%;
+  max-width: 1000px;
   border-collapse: collapse;
-  margin: 20px 0;
+  margin: 30px auto;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 12px;
   text-align: left;
+  font-size: 14px;
 }
 
 th {
   background-color: #f4f4f4;
+  color: #555;
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
 }
 
 /*Responsive*/
 @media (max-width: 768px){
-  /*.menu{
+  .menuClases {
     flex-direction: column;
-    align-items: flex-start;
-    width: auto;
-    padding: 10px;
+    align-items: center;
+    padding: 10px 5%;
   }
 
-  .menu-item{
+  .menu-item {
     flex: none;
-    margin: 5px 0;
-    text-align: left;
     width: 100%;
-  }*/
+    font-size: 15px;
+    margin: 5px 0;
+  }
+
+  table {
+    width: 95%;
+  }
+
+  th, td {
+    font-size: 12px;
+    padding: 8px;
+  }
 }
 
 @media (max-width: 480px){
-  /*.menu{
-    font-size: 14px;
-    align-items: flex-start;
-    width: auto;
-    padding: 5px;
+  .menuClases {
+    padding: 8px 2%;
   }
 
-  .menu-item{
-    margin: 3px 0;
-  }*/
+  .menu-item {
+    font-size: 14px;
+  }
+
+  table {
+    font-size: 12px;
+  }
 }
 
 </style>
